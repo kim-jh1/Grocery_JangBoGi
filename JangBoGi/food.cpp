@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS 
+
 #include <iostream>
 #include <cstdio>
 #include <ctime>
@@ -11,6 +13,10 @@ class Food
 	string recipe[3]; // 만들 수 있는 요리 종류
 	int f_year = 0, f_month = 0, f_day = 0; // 유통기한
 	string state = "미"; // 재료 보관 상태( 냉장, 냉동, 상온)
+
+	time_t today = time(NULL);
+	struct tm* t = localtime(&today);
+	int thisYear = t->tm_year + 1900;
 
 public:
 	//Food() :name(), makeFood(), f_year(), f_month(), f_day(), state() {}
@@ -38,7 +44,8 @@ public:
 	void setName(string name); // 이름 세터
 	void setShelfDate(int f_year, int f_month, int f_day); // 유통기한 세터
 	void setMakeFood(string recipe1, string recipe2, string recipe3); // 만들 수 있는 요리 세터
-	void setState(string state); // 보관상태 세터
+	void setState(); // 보관상태 세터
+	void showMakeFood();
 
 	void showLeftDate(); //유통기한 며칠 남았는지
 	void showState(); //현재 보관상태
@@ -69,9 +76,40 @@ void Food::setName(string name) // 이름 세터
 
 void Food::setShelfDate(int f_year, int f_month, int f_day)
 {
-	this->f_year = f_year;
-	this->f_month = f_month;
-	this->f_day = f_day;
+	int days = 0;
+	if ((thisYear <= f_year) && (f_year <= thisYear + 100))
+	{
+		if (1 <= f_month && f_month <= 12)
+		{
+			if (f_month == 1 || f_month == 3 || f_month == 5 || f_month == 7 || f_month == 8 || f_month == 10 || f_month == 12) {
+				days = 31;
+			}
+			else if (f_month == 2) {
+				days = 28;
+			}
+			else
+				days = 30;
+
+			if ((1 <= f_day) && (f_day < days)) {
+				this->f_year = f_year;
+				this->f_month = f_month;
+				this->f_day = f_day;
+			}
+			else {
+				cout << getName() << "의 일을 다시 입력하시오(1~" << days << ")\n" << endl;
+				return;
+			}
+
+		}
+		else {
+			cout << getName() << "의 월을 다시 입력하시오(1~12)\n" << endl;
+			return;
+		}
+	}
+	else {
+		cout << getName() << "의 년을 다시 입력하시오(" << thisYear << "~)\n" << endl;
+		return;
+	}
 }
 
 void Food::setMakeFood(string recipe1 = "No", string recipe2 = "NO", string recipe3 = "NO") {
@@ -80,11 +118,25 @@ void Food::setMakeFood(string recipe1 = "No", string recipe2 = "NO", string reci
 	recipe[2] = recipe3;
 }
 
-void Food::setState(string state) {
-	this->state = state;
+void Food::setState() {
+	string state;
+	cout << getName() << "의 보관상태를 입력하시오 : ";
+	cin >> state;
+	while (1) {
+		if (state == "상온" || state == "냉장" || state == "냉동")
+		{
+			this->state = state;   return;
+		}
+		else {  //세가지 상태에 해당 안되면 재입력.
+			cout << "재입력 : ";
+			cin >> state;
+		}
+	}
 }
 
 void Food::showLeftDate() {
+	if (state == "미") //현재 사용자의 냉장고에 미보관이면 유통기한 출력X
+		return;
 	time_t shelfdate, today;
 	double diff; //유통기한과 현재시각 비교
 	int day; //비교 후 남은 일수 넣음
@@ -105,9 +157,13 @@ void Food::showState() {
 	cout << "현재 " << getState() << "보관 중입니다." << endl;
 }
 
+void Food::showMakeFood() {
+	cout << getName() << "으로 만들 수 있는 음식은 " << getRecipe() << endl;
+}//만들 수 있는 음식
+
 //보관 중인 해당 식재료의 이름, 보관상태, 유통기한 한번에 보여줌.
 void Food::CheckAll() {
-	getRecipe();
+	showMakeFood();
 	showLeftDate();
 	showState();
 	cout << endl;
