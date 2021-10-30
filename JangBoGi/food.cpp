@@ -43,7 +43,8 @@ public:
 
 	void setName(string name); // 이름 세터
 	void setShelfDate(int f_year, int f_month, int f_day); // 유통기한 세터
-	void setMakeFood(string recipe1, string recipe2, string recipe3); // 만들 수 있는 요리 세터
+	//void setMakeFood(string recipe1, string recipe2, string recipe3); // 만들 수 있는 요리 세터
+	void setMakeFood();
 	void setState(); // 보관상태 세터
 	void showMakeFood();
 
@@ -112,10 +113,9 @@ void Food::setShelfDate(int f_year, int f_month, int f_day)
 	}
 }
 
-void Food::setMakeFood(string recipe1 = "No", string recipe2 = "NO", string recipe3 = "NO") {
-	recipe[0] = recipe1;
-	recipe[1] = recipe2;
-	recipe[2] = recipe3;
+void Food::setMakeFood() {
+	cout << getName() << "으로 만들 수 있는 음식 목록을 재설정합니다.";
+	cin >> recipe[0] >> recipe[1] >> recipe[2];
 }
 
 void Food::setState() {
