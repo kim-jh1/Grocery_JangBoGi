@@ -55,18 +55,18 @@ public:
 void ShowAllFood(vector<Food>& food); //해당 Food목록의 전체 식재료명 출력
 
 
-string Food::getRecipe()const {
+string Food::getRecipe() const {
 	string FullRecipe;
 	for (int i = 0; i < 3; i++) {
-		if (recipe[i] != "NO") {
+		if (recipe[i] != "NO" && recipe[i] != "No") {
 			FullRecipe += recipe[i];
-			if ((i < 2) && (recipe[i + 1] != "NO"))
+			if ((i < 2) && ((recipe[i + 1] != "NO") && (recipe[i + 1] != "No")))
 				FullRecipe += ", ";
 		}
 	}
 	if (FullRecipe == "")
 		return "만들 수 있는 요리가 없습니다.";
-	return FullRecipe;
+	return FullRecipe + "입니다.";
 }
 
 void Food::setName(string name) // 이름 세터
