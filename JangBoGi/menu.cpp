@@ -21,166 +21,265 @@
 #define RIGHT 77
 #define ENTER 13
 
-#include <iostream>
-#include <iomanip>
-#include <conio.h>
-#include <windows.h>
 #include "menu.h"
 
 using namespace std;
 
-static bool fridge = true;
-static bool freezer = false;
-static bool room = false;
-static bool in_fridge = false;
-static bool in_freezer = false;
-static bool in_room = false;
-static int cursor = 0;
+refrigerator::refrigerator(string position = "NULL", int cursor = 0) {
+	this->position = position;
+	this->cursor = cursor;
+}
 
-void textcolor(int foreground, int background)
+void refrigerator::setPosition(string position) {
+	this->position = position;
+}
+
+void refrigerator::textcolor(int foreground, int background)
 {
 	int color = foreground + background * 16;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-bool getKey() {
+void refrigerator::setFood(vector<string> arr, string food) {
+	arr.push_back(food);
+}
+
+void refrigerator::getKey() {
 	char c;
 	if (_kbhit()) {
 		c = _getch();
+		//if (c == 13) {
+		//	//엔터로 데이터 이동
+		//}
 		if (c == -32) {
 			c = _getch();
+
 			switch (c) {
 			case LEFT:
-				if (freezer == true) {
-					freezer = false;
-					fridge = true;
+				if (position == "freezer") {
+					position = "fridge";
 				}
-				else if (room == true) {
-					room = false;
-					freezer = true;
+				else if (position == "room") {
+					position = "freezer";
+				}
+				else if (position == "fish") {
+					position = "meat";
+				}
+				else if (position == "vege") {
+					position = "fish";
+				}
+				else if (position == "fruit") {
+					position = "vege";
+				}
+				else if (position == "sauce") {
+					position = "fruit";
 				}
 				break;
+
 			case RIGHT:
-				if (fridge == true) {
-					fridge = false;
-					freezer = true;
+				if (position == "fridge") {
+					position = "freezer";
 				}
-				else if (freezer == true) {
-					freezer = false;
-					room = true;
+				else if (position == "freezer") {
+					position = "room";
+				}
+				else if (position == "meat") {
+					position = "fish";
+				}
+				else if (position == "fish") {
+					position = "vege";
+				}
+				else if (position == "vege") {
+					position = "fruit";
+				}
+				else if (position == "fruit") {
+					position = "sauce";
 				}
 				break;
+
 			case UP:
-				if (cursor == 1) {
-					if (in_fridge == true) {
-						in_fridge = false;
-						fridge = true;
-						cursor -= 1;
-					}
-					else if (in_freezer == true) {
-						in_freezer = false;
-						freezer = true;
-						cursor -= 1;
-					}
-					else if (in_room == true) {
-						in_room = false;
-						room = true;
-						cursor -= 1;
-					}
-				}
-				else {
+				if (cursor > 0) {
 					cursor -= 1;
 				}
 				break;
 			case DOWN:
-				if (cursor == 0) {
-					if (fridge == true) {
-						fridge = false;
-						in_fridge = true;
+				if (cursor < 20) {
+					if (position == "fridge" || position == "freezer" || position == "room") {
 						cursor += 1;
 					}
-					else if (freezer == true) {
-						freezer = false;
-						in_freezer = true;
+					else if (position == "meat" || position == "fish" || position == "vege" || position == "fruit" || position == "sauce") {
 						cursor += 1;
 					}
-					else if (room == true) {
-						room = false;
-						in_room = true;
-						cursor += 1;
-					}
-				}
-				else {
-					cursor += 1;
 				}
 				break;
 			}
 		}
 	}
-	return true;
 }
 
-void status() //냉장, 냉동, 실온 리스트를 인자로 받고 출력
+void refrigerator::show_inventory() //냉장, 냉동, 실온 리스트를 인자로 받고 출력
 {
 	cout << "|";
-	if (fridge == true) {
+	if (position == "fridge" && cursor == 0) {
 		textcolor(WHITE, RED);
-		cout << left << setw(20) << "냉장고";
+		cout << left << setw(20) << "       냉장고";
 		textcolor(WHITE, BLACK);
 	}
 	else {
-		cout << left << setw(20) << "냉장고";
+		cout << left << setw(20) << "       냉장고";
 	}
 
 	cout << "|";
-	if (freezer == true) {
+	if (position == "freezer" && cursor == 0) {
 		textcolor(WHITE, RED);
-		cout << left << setw(20) << "냉동실";
+		cout << left << setw(20) << "       냉동실";
 		textcolor(WHITE, BLACK);
 	}
 	else {
-		cout << left << setw(20) << "냉동실";
+		cout << left << setw(20) << "       냉동실";
 	}
 
 	cout << "|";
-	if (room == true) {
+	if (position == "room" && cursor == 0) {
 		textcolor(WHITE, RED);
-		cout << left << setw(20) << "실온";
+		cout << left << setw(20) << "       실온";
 		textcolor(WHITE, BLACK);
 	}
 	else {
-		cout << left << setw(20) << "실온";
+		cout << left << setw(20) << "       실온";
 	}
 	cout << "|";
 	cout << endl;
 
 	cout << "===============================================================\n";
 	for (int i = 1; i <= 20; i++) {
-		if (in_fridge == true && cursor == i) {
+		if (position == "fridge" && cursor == i) {
 			textcolor(WHITE, RED);
-			cout << "|" << left << setw(20) << "냉장음식" << "|";
+			cout << "|" << left << setw(20) << "       냉장음식" << "|";
 			textcolor(WHITE, BLACK);
 		}
 		else {
-			cout << "|" << left << setw(20) << "냉장음식" << "|";
+			cout << "|" << left << setw(20) << "       냉장음식" << "|";
 		}
 
-		if (in_freezer == true && cursor == i) {
+		if (position == "freezer" && cursor == i) {
 			textcolor(WHITE, RED);
-			cout << left << setw(20) << "냉동음식" << "|";
+			cout << left << setw(20) << "       냉동음식" << "|";
 			textcolor(WHITE, BLACK);
 		}
 		else {
-			cout << left << setw(20) << "냉동음식" << "|";
+			cout << left << setw(20) << "       냉동음식" << "|";
 		}
 
-		if (in_room == true && cursor == i) {
+		if (position == "room" && cursor == i) {
 			textcolor(WHITE, RED);
-			cout << left << setw(20) << "실온음식" << "|" << endl;
+			cout << left << setw(20) << "       실온음식" << "|" << endl;
 			textcolor(WHITE, BLACK);
 		}
 		else {
-			cout << left << setw(20) << "실온음식" << "|" << endl;
+			cout << left << setw(20) << "       실온음식" << "|" << endl;
+		}
+	}
+}
+
+void refrigerator::show_ingredient() {
+	cout << "|";
+	if (position == "meat" && cursor == 0) {
+		textcolor(WHITE, RED);
+		cout << left << setw(20) << "       고기";
+		textcolor(WHITE, BLACK);
+	}
+	else {
+		cout << left << setw(20) << "       고기";
+	}
+
+	cout << "|";
+	if (position == "fish" && cursor == 0) {
+		textcolor(WHITE, RED);
+		cout << left << setw(20) << "       생선";
+		textcolor(WHITE, BLACK);
+	}
+	else {
+		cout << left << setw(20) << "       생선";
+	}
+
+	cout << "|";
+	if (position == "vege" && cursor == 0) {
+		textcolor(WHITE, RED);
+		cout << left << setw(20) << "       채소";
+		textcolor(WHITE, BLACK);
+	}
+	else {
+		cout << left << setw(20) << "       채소";
+	}
+
+	cout << "|";
+	if (position == "fruit" && cursor == 0) {
+		textcolor(WHITE, RED);
+		cout << left << setw(20) << "       과일";
+		textcolor(WHITE, BLACK);
+	}
+	else {
+		cout << left << setw(20) << "       과일";
+	}
+
+	cout << "|";
+	if (position == "sauce" && cursor == 0) {
+		textcolor(WHITE, RED);
+		cout << left << setw(20) << "       소스";
+		textcolor(WHITE, BLACK);
+	}
+	else {
+		cout << left << setw(20) << "       소스";
+	}
+	cout << "|";
+	cout << endl;
+
+	cout << "==========================================================================================================\n";
+	for (int i = 1; i <= 20; i++) {
+		if (position == "meat" && cursor == i) {
+			textcolor(WHITE, RED);
+			cout << "|" << left << setw(20) << "       고기재료" << "|";
+			textcolor(WHITE, BLACK);
+		}
+		else {
+			cout << "|" << left << setw(20) << "       고기재료" << "|";
+		}
+
+		if (position == "fish" && cursor == i) {
+			textcolor(WHITE, RED);
+			cout << left << setw(20) << "       생선재료" << "|";
+			textcolor(WHITE, BLACK);
+		}
+		else {
+			cout << left << setw(20) << "       생선재료" << "|";
+		}
+
+		if (position == "vege" && cursor == i) {
+			textcolor(WHITE, RED);
+			cout << left << setw(20) << "       채소재료" << "|" ;
+			textcolor(WHITE, BLACK);
+		}
+		else {
+			cout << left << setw(20) << "       채소재료" << "|";
+		}
+
+		if (position == "fruit" && cursor == i) {
+			textcolor(WHITE, RED);
+			cout << left << setw(20) << "       과일재료" << "|";
+			textcolor(WHITE, BLACK);
+		}
+		else {
+			cout << left << setw(20) << "       과일재료" << "|";
+		}
+
+		if (position == "sauce" && cursor == i) {
+			textcolor(WHITE, RED);
+			cout << left << setw(20) << "       소스재료" << "|" << endl;
+			textcolor(WHITE, BLACK);
+		}
+		else {
+			cout << left << setw(20) << "       소스재료" << "|" << endl;
 		}
 	}
 }
