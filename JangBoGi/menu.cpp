@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <conio.h>
 #include <windows.h>
+#include "menu.h"
 
 using namespace std;
 
@@ -182,16 +183,4 @@ void status() //냉장, 냉동, 실온 리스트를 인자로 받고 출력
 			cout << left << setw(20) << "실온음식" << "|" << endl;
 		}
 	}
-}
-
-int main(void)
-{
-	while (1) {
-		status();
-		getKey();
-		Sleep(300);
-		system("cls");
-	}
-
-	return 0;
 }
