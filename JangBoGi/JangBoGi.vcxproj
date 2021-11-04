@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="food.cpp" />
     <ClCompile Include="home.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
