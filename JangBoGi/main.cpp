@@ -1,6 +1,7 @@
 #include "home.h"
 #include "menu.h"
 #include "food.h"
+#include "add.h"
 
 int main()
 {
@@ -16,7 +17,7 @@ int main()
 			while (1) {
 				ref->show_inventory();
 				ref->getKey();
-				Sleep(100);
+				Sleep(300);
 				system("cls");
 			}
 		}
@@ -27,15 +28,21 @@ int main()
 				while (1) {
 					ref->show_ingredient();
 					ref->getKey();
-					Sleep(100);
+					Sleep(300);
 					system("cls");
 				}
 			}
 		}
 		else if (menucode == 2)
+		{
+			add();
+			system("cls");
+		}
+		else if (menucode == 3)
+		{
 			return 0;
-		system("cls");
-
+			system("cls");
+		}
 	}
 	return 0;
 }

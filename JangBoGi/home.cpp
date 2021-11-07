@@ -25,11 +25,13 @@ int menudraw()
 	int x = 50;
 	int y = 12;
 	gotoxy(x - 2, y);
-	printf("> 현황");
+	printf("> 현 황");
 	gotoxy(x, y + 1);
-	printf("재료");
+	printf("재 료");
 	gotoxy(x, y + 2);
-	printf("종료");
+	printf("추 가");
+	gotoxy(x, y + 3);
+	printf("종 료");
 	while (1)
 	{
 		int n = keyControl();
@@ -45,7 +47,7 @@ int menudraw()
 			}
 			break;
 		case DOWN:
-			if (y < 14)
+			if (y < 15)
 			{
 				gotoxy(x - 2, y);
 				printf(" ");
